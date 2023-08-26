@@ -1,7 +1,7 @@
 -- Table containing the raw GitHub URLs of the scripts to update
 local githubURLs = {
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/minerscript.lua",
-    "https://raw.githubusercontent.com/YourUsername/YourRepo/main/Script2.lua",
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/updatescripts.lua",
     -- Add more URLs as needed
 }
 

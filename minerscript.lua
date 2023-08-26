@@ -57,6 +57,7 @@ function resurface()
             turtle.down()
             currentElevation = currentElevation - 1
         end
+        turtle.forward()
     end
 end
 
@@ -67,17 +68,22 @@ end
 
 while true do
     checkFuel()
-    
-    -- Dig down twice to make room for the ladder and climbing
+
+    -- Dig the main shaft
     turtle.digDown()
     turtle.down()
     currentElevation = currentElevation - 1
-    turtle.digDown()
+
+    -- Move to the side shaft
+    turtle.forward()
     
-    -- Move to the side, dig a block for ladder placement and place the ladder
-    turtle.turnRight()
-    turtle.dig()
-    turtle.turnLeft()
+    -- Dig the side shaft
+    turtle.digDown()
+    turtle.down()
+    currentElevation = currentElevation - 1
+
+    -- Place the ladder in the main shaft
+    turtle.back()
     if not turtle.detectDown() then
         turtle.select(blockSlot)
         turtle.placeDown()
@@ -85,11 +91,6 @@ while true do
     turtle.select(ladderSlot)
     turtle.placeUp()
     
-    -- Move back to the central shaft
-    turtle.turnRight()
-    turtle.forward()
-    turtle.turnLeft()
-
     if currentElevation <= targetY then
         print("Target depth reached. Resurfacing.")
         resurface()
