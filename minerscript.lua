@@ -1,18 +1,20 @@
 -- Advanced mining turtle
 local args = {...}
 if #args < 2 then
-    print("Usage: mining_turtle <initial_elevation> <target_y>")
+    print("Usage: minerscript <initial_elevation> <target_y>")
     return
 end
 
 local initialElevation = tonumber(args[1])
 local targetY = tonumber(args[2])
+
 if targetY < -58 then
     print("Target Y capped at -58")
     targetY = -58
 end
 
-local currentElevation = initialElevation
+local delta = initialElevation - targetY
+local moved = 0
 local ladderSlot, blockSlot, coalSlot = 0, 0, 0
 
 function checkInventory()
@@ -40,24 +42,25 @@ function refuel()
 end
 
 function checkFuel()
-    if turtle.getFuelLevel() < math.abs(currentElevation - initialElevation) + 10 then
+    if turtle.getFuelLevel() < (moved + 1) * 2 + 10 then
         print("Low fuel! Resurfacing.")
-        resurface()
+        resurface(moved)
+        return false
     else
         refuel()
+        return true
     end
 end
 
-function resurface()
-    while currentElevation ~= initialElevation do
-        if currentElevation < initialElevation then
-            turtle.up()
-            currentElevation = currentElevation + 1
-        else
-            turtle.down()
-            currentElevation = currentElevation - 1
-        end
-        turtle.forward()
+function resurface(blocksToMove)
+    -- Turn right, move to the second shaft
+    turtle.turnRight()
+    turtle.forward()
+    turtle.turnLeft()
+
+    -- Move up the second shaft
+    for i = 1, blocksToMove + 1 do
+        turtle.up()
     end
 end
 
@@ -66,38 +69,45 @@ if not checkInventory() then
     return
 end
 
-while true do
-    checkFuel()
-
-    -- Dig the main shaft
-    turtle.digDown()
-    turtle.down()
-    currentElevation = currentElevation - 1
-
-    -- Move to the side shaft
-    turtle.forward()
-    
-    -- Dig the side shaft
-    turtle.digDown()
-    turtle.down()
-    currentElevation = currentElevation - 1
-
-    -- Place the ladder in the main shaft
-    turtle.back()
-    if not turtle.detectDown() then
-        turtle.select(blockSlot)
-        turtle.placeDown()
-    end
-    turtle.select(ladderSlot)
-    turtle.placeUp()
-    
-    if currentElevation <= targetY then
-        print("Target depth reached. Resurfacing.")
-        resurface()
+while moved < delta do
+    if not checkFuel() then
+        print("Resurfaced due to low fuel. Exiting.")
         break
     end
 
-    print("Current elevation: " .. currentElevation)
+    -- Dig down in Shaft 1
+    turtle.digDown()
+
+    -- Move down so it's in shaft 1
+    turtle.down()
+    moved = moved + 1
+
+    -- Turn right so it's facing shaft 2
+    turtle.turnRight()
+
+    -- Dig block in shaft 2
+    turtle.dig()
+
+    -- Turn left to face the wall the ladders will be placed on
+    turtle.turnLeft()
+
+    -- Place a block in front if no block exists
+    if not turtle.detect() then
+        turtle.select(blockSlot)
+        turtle.place()
+    end
+
+    -- Place the ladder above it in shaft 1
+    turtle.select(ladderSlot)
+    turtle.placeUp()
+
+    if moved >= delta then
+        print("Target depth reached. Resurfacing.")
+        resurface(moved)
+        break
+    end
+
+    print("Blocks moved: " .. moved)
 end
 
 print("Mining complete!")
