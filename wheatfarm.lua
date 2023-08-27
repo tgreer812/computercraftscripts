@@ -9,28 +9,28 @@ function inspect()
         return
     end
 
-    -- If block below is wheat
+    -- If the block is wheat, check if it's fully grown
     if data.name == "minecraft:wheat" then
-        print("Inspecting wheat...")
-        -- If wheat is fully grown, harvest it
+        print("wheat")
         if data.metadata == 7 then
             turtle.digDown()
         end
-        turtle.select(1)  -- Seeds are assumed to be in slot 1
-        turtle.placeDown()  -- Plant a seed if space is empty
+        turtle.select(1)
+        turtle.placeDown()
         return
     end
 
-    -- Otherwise, descend and check the block below
+    -- Otherwise, go down and check if it's dirt
+    print("not wheat")
     turtle.down()
-    local success, data = turtle.inspectDown()
+    success, data = turtle.inspectDown()
     if success and data.name == "minecraft:dirt" then
-        print("Inspecting dirt...")
-        turtle.digDown()  -- Till the soil
-        turtle.select(1)  -- Seeds are assumed to be in slot 1
-        turtle.placeDown()  -- Plant a seed
+        print("dirt")
+        turtle.digDown()
+        turtle.select(1)
+        turtle.placeDown()
     end
-    turtle.up()  -- Ascend back to hover level
+    turtle.up()
 end
 
 function move(mode)
@@ -38,28 +38,46 @@ function move(mode)
     
     if success and data.name == "minecraft:cobblestone" then
         if mode == "forward" then
+            print("Turning right from forward mode")
             turtle.turnRight()
             
-            local success, data = turtle.inspect()
+            success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
+                print("Moving to backward mode")
                 return "backward"
             else
                 turtle.forward()
                 turtle.turnRight()
                 return "backward"
             end
-        else
+
+        elseif mode == "backward" then
+            print("Turning left from backward mode")
             turtle.turnLeft()
-            
-            local success, data = turtle.inspect()
+
+            success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
-                turtle.turnLeft()
-                return "forward"
+                turtle.turnRight()
+                print("Completed the farm, moving to returning mode")
+                return "returning"
             else
                 turtle.forward()
                 turtle.turnLeft()
                 return "forward"
+            end
+
+        elseif mode == "returning" then
+            print("Returning to start")
+            turtle.forward()
+            
+            success, data = turtle.inspect()
+            if success and data.name == "minecraft:cobblestone" then
+                turtle.turnRight()
+                print("Reached the start, moving to forward mode")
+                return "forward"
+            else
+                return "returning"
             end
         end
     else
@@ -70,13 +88,10 @@ end
 
 function main()
     local mode = "forward"
-
-    while true do  -- Infinite loop for continuous farming
-        -- Call inspect and move forward until hitting a cobblestone wall
+    while true do
         inspect()
         mode = move(mode)
     end
 end
 
--- Run the main function
 main()
