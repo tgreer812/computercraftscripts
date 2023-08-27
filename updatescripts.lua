@@ -3,9 +3,10 @@ local githubURLs = {
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/minerscript.lua",
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/updatescripts.lua",
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stairplacer.lua",
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stripmine.lua"
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/wheatfarm.lua"
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stairplacer.lua",
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/betterexcavate.lua",
-    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/wheatfarm.lua"
     -- Add more URLs as needed
 }
 
