@@ -77,10 +77,7 @@ local function reset()
 end
  
 
-print("Better Excavate")
-print("https://github.com/na-stewart/Better-Excavate")
-print("------------------------------------")
-print("Excavation initiated, please monitor occasionally.")
+print("Excavation initiated...")
 for y = 1, depth do
     turtle.select(1)
     turtle.refuel()
