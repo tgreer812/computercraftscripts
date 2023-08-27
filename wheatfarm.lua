@@ -130,10 +130,10 @@ function move(mode)
                 turtle.turnRight()
                 turtle.turnRight()
 
-                print("Farm complete. Restarting in 60s")
+                print("Farm complete. Restarting in 180s")
                 print("Fuel level: " .. turtle.getFuelLevel())
-                os.sleep(60)
-                
+                os.sleep(180)
+
                 return "forward"
             else
                 turtle.forward()
