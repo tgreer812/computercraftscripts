@@ -7,7 +7,7 @@ function inspect()
 
     -- If the block is wheat, check if it's fully grown
     if success and data.name == "minecraft:wheat" then
-        print("wheat")
+        print("harvesting...")
         if data.metadata == 7 then
             turtle.digDown()
         end
@@ -19,8 +19,8 @@ function inspect()
     -- Otherwise, go down and check if it's dirt
     turtle.down()
     success, data = turtle.inspectDown()
-    if success and data.name == "minecraft:dirt" then
-        print("dirt")
+    if success and data.name == "minecraft:dirt" or data.name == "minecraft:grass_block" then
+        print("tilling...")
         turtle.digDown()
         turtle.select(1)
         turtle.placeDown()
@@ -69,6 +69,7 @@ function move(mode)
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
                 print("Reached the start, moving to forward mode")
+                wait(60)
                 return "forward"
             else
                 turtle.forward()
