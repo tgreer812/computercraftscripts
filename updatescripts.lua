@@ -5,6 +5,9 @@ local githubURLs = {
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stairplacer.lua",
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stripmine.lua"
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/wheatfarm.lua"
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stairplacer.lua",
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/betterexcavate.lua",
+    -- Add more URLs as needed
 }
 
 -- Function to extract the script name from a GitHub URL
