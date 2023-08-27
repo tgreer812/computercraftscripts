@@ -2,6 +2,7 @@
 local githubURLs = {
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/minerscript.lua",
     "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/updatescripts.lua",
+    "https://raw.githubusercontent.com/tgreer812/computercraftscripts/main/stairplacer.lua"
     -- Add more URLs as needed
 }
 
