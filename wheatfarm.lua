@@ -34,18 +34,22 @@ function inspect()
         return
     end
 
+    -- Before we do anything else, check if we have wheat to plant
+    if turtle.getItemCount(1) == 0 then
+        print("Out of wheat!")
+        return
+    end
+
+    -- Attempt to plant a seed if there is no wheat
+    local success = turtle.placeDown()
+    if success then
+        return
+    end
+
+    -- Attempt to till the ground if there is no seed
     turtle.down()
     success, data = turtle.inspectDown()
-    if success then
-        print(data)
-    end
-    if success and data.name == "minecraft:farmland" then
-        print("Planting on tilled land...")
-        turtle.up()
-        turtle.select(1)
-        turtle.placeDown()
-        return
-    elseif success and (data.name == "minecraft:dirt" or data.name == "minecraft:grass_block") then
+    if success and (data.name == "minecraft:dirt" or data.name == "minecraft:grass_block") then
         print("Tilling and planting...")
         turtle.up()
         turtle.digDown()
