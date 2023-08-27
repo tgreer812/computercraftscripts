@@ -1,10 +1,14 @@
 -- Credits https://github.com/na-stewart/Better-Excavate/blob/master/bexcavate.lua
-local args = { ... }
-local turn_right = true
-local width = assert(tonumber(args[1]), "Usage: bexcavate <Width> <Length> <Depth>")
-local length = assert(tonumber(args[2]) - 1, "Usage: bexcavate <Width> <Length> <Depth>")
-local depth = assert(tonumber(args[3]), "Usage: bexcavate <Width> <Length> <Depth>")
+local args = {...}
+if #args < 3 then
+    print("Usage: bexcavate <Width> <Length> <Depth>")
+    return
+end
 
+local turn_right = true
+local width = tonumber(args[1])
+local length = tonumber(args[2])
+local depth = tonumber(args[3])
  
 local function rotate_right()
     turtle.turnRight()
