@@ -16,6 +16,18 @@ function checkFuel()
     end
 end
 
+-- Function to move seeds to the first slot after harvesting
+function moveSeedsToFirstSlot()
+    for i = 2, 16 do  -- Skip the first slot, search through slots 2-16
+        turtle.select(i)
+        local itemDetail = turtle.getItemDetail()
+        if itemDetail and itemDetail.name == "minecraft:wheat_seeds" then
+            turtle.transferTo(1)  -- Move seeds to the first slot
+            break
+        end
+    end
+end
+
 -- Inspect and take action based on the block below the turtle
 function inspect()
     -- Check fuel before any action
@@ -25,8 +37,15 @@ function inspect()
 
     if success and data.name == "minecraft:wheat" then
         if data.state.age == 7 then
+            -- Before harvesting, select the 2nd slot
+            turtle.select(2)
             turtle.digDown()
+
+            -- Then, move seeds to the first slot and reselect
+            moveSeedsToFirstSlot()
+            turtle.select(1)
         end
+        
         turtle.select(1)
         turtle.placeDown()
 
