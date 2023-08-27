@@ -8,7 +8,8 @@ function checkFuel()
         print("Low fuel! Attempting to refuel...")
         turtle.select(REFUEL_SLOT)
         while turtle.getFuelLevel() < FUEL_THRESHOLD do
-            turtle.refuel(1)
+            -- refuel as much as possible
+            turtle.refuel()
             os.sleep(10)
         end
         print("Refueled!")
@@ -62,12 +63,10 @@ function move(mode)
     
     if success and data.name == "minecraft:cobblestone" then
         if mode == "forward" then
-            print("Turning right from forward mode")
             turtle.turnRight()
             success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
-                print("Moving to backward mode")
                 return "backward"
             else
                 turtle.forward()
@@ -75,12 +74,12 @@ function move(mode)
                 return "backward"
             end
         elseif mode == "backward" then
-            print("Turning left from backward mode")
             turtle.turnLeft()
             success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
-                print("Completed the farm, moving to returning mode")
+                turtle.turnRight()
+                print("Returning to start")
                 return "returning"
             else
                 turtle.forward()
@@ -92,7 +91,7 @@ function move(mode)
             success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
-                print("Reached the start, moving to forward mode")
+                print("Farm complete. Restarting in 60s")
                 os.sleep(60)
                 return "forward"
             else
