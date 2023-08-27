@@ -45,7 +45,7 @@ function inspect()
             moveSeedsToFirstSlot()
             turtle.select(1)
         end
-        
+
         turtle.select(1)
         turtle.placeDown()
 
@@ -85,11 +85,11 @@ function move(mode)
 
     local success, data = turtle.inspect()
     
-    if success and data.name == "minecraft:cobblestone" then
+    if success then
         if mode == "forward" then
             turtle.turnRight()
             success, data = turtle.inspect()
-            if success and data.name == "minecraft:cobblestone" then
+            if success then
                 turtle.turnRight()
                 return "backward"
             else
@@ -100,7 +100,7 @@ function move(mode)
         elseif mode == "backward" then
             turtle.turnLeft()
             success, data = turtle.inspect()
-            if success and data.name == "minecraft:cobblestone" then
+            if success then
                 turtle.turnRight()
                 turtle.turnRight()
                 return "returning"
@@ -112,7 +112,7 @@ function move(mode)
         elseif mode == "returning" then
             print("Returning to start")
             success, data = turtle.inspect()
-            if success and data.name == "minecraft:cobblestone" then
+            if success then
                 turtle.turnRight()
                 print("Farm complete. Restarting in 60s")
                 print("Fuel level: " .. turtle.getFuelLevel())
