@@ -5,14 +5,14 @@ local REFUEL_SLOT = 16
 -- Function to check and refuel the turtle
 function checkFuel()
     if turtle.getFuelLevel() < FUEL_THRESHOLD then
-        print("Low fuel! Attempting to refuel...")
+        print("Waiting for fuel...")
         turtle.select(REFUEL_SLOT)
         while turtle.getFuelLevel() < FUEL_THRESHOLD do
             -- refuel as much as possible
             turtle.refuel()
             os.sleep(10)
         end
-        print("Refueled!")
+        print("Refueled to " .. turtle.getFuelLevel())
     end
 end
 
@@ -25,7 +25,6 @@ function inspect()
 
     if success and data.name == "minecraft:wheat" then
         if data.state.age == 7 then
-            print("Harvesting...")
             turtle.digDown()
         end
         turtle.select(1)
@@ -50,7 +49,6 @@ function inspect()
     turtle.down()
     success, data = turtle.inspectDown()
     if success and (data.name == "minecraft:dirt" or data.name == "minecraft:grass_block") then
-        print("Tilling and planting...")
         turtle.up()
         turtle.digDown()
         turtle.select(1)
@@ -86,7 +84,6 @@ function move(mode)
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
                 turtle.turnRight()
-                print("Returning to start")
                 return "returning"
             else
                 turtle.forward()
@@ -99,6 +96,7 @@ function move(mode)
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
                 print("Farm complete. Restarting in 60s")
+                print("Fuel level: " .. turtle.getFuelLevel())
                 os.sleep(60)
                 return "forward"
             else
