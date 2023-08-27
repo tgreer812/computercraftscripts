@@ -278,7 +278,7 @@ for h = 1, height do
             end
         end
         if done then break end
-
+        
         if w < width then
             turnRight()
             if not tryForwards() then
@@ -286,15 +286,20 @@ for h = 1, height do
                 break
             end
             turnLeft()
-        elseif w == width then
-            turnRight()
-            turnRight()
         end
     end
     if done then break end
-
+    
+    -- Return to starting point for this layer
     turnLeft()
     for l = 1, length do
+        if not tryForwards() then
+            done = true
+            break
+        end
+    end
+    turnRight()
+    for w = 1, width - 1 do
         if not tryForwards() then
             done = true
             break
@@ -309,6 +314,7 @@ for h = 1, height do
         end
     end
 end
+
 
 -- (Returning to the surface and unloading code can remain the same)
 print( "Returning to surface..." )
