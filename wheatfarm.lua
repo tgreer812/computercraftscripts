@@ -24,8 +24,8 @@ function inspect()
     local success, data = turtle.inspectDown()
 
     if success and data.name == "minecraft:wheat" then
-        print("Harvesting...")
-        if data.metadata == 7 then
+        if data.state.age == 7 then
+            print("Harvesting...")
             turtle.digDown()
         end
         turtle.select(1)
