@@ -1,3 +1,5 @@
+-- version 1.0.0
+
 local args = {...}
 if #args < 3 then
     print("Usage: flatten <Width> <Length> <Height>")
@@ -9,14 +11,38 @@ local width = tonumber(args[1])
 local length = tonumber(args[2])
 local height = tonumber(args[3])
 
-local function rotate_right()
-    turtle.turnRight()
-    turtle.turnRight()
+local search_for_blocks = true
+local blockNames = {"minecraft:dirt", "minecraft:grass", "minecraft:cobblestone", "minecraft:stone"}
+
+local function hasBlock(name)
+    if not search_for_blocks then return false end
+    
+    for slot = 1, 16 do
+        turtle.select(slot)
+        local data = turtle.getItemDetail()
+        if data and data.name == name then
+            return true
+        end
+    end
+    return false
+end
+
+local function placeBlock()
+    for _, name in ipairs(blockNames) do
+        if hasBlock(name) then
+            turtle.placeDown()
+            return true
+        end
+    end
+    search_for_blocks = false
+    return false
 end
 
 local function forward()
+    if turtle.dig() then
+        search_for_blocks = true
+    end
     while not turtle.forward() do
-        turtle.dig()
         turtle.attack()
         sleep(0.5)
     end
@@ -70,7 +96,10 @@ for y = 1, height do
     for x = 1, width, 1 do
         for z = 1, length, 1 do
             turtle.dig()
-            forward()    
+            forward()
+            if y == 1 then
+                placeBlock()
+            end
         end
         if x < width then
             turn_around()
