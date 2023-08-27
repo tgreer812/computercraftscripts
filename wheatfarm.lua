@@ -34,51 +34,47 @@ function inspect()
 end
 
 function move(mode)
-    -- Move forward until hitting a cobblestone wall
     local success, data = turtle.inspect()
+    
     if success and data.name == "minecraft:cobblestone" then
         if mode == "forward" then
             turtle.turnRight()
-
+            
             local success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnRight()
-                print("done")
-
-                -- TODO: handle this
+                return "backward"
             else
                 turtle.forward()
                 turtle.turnRight()
-                mode = "backward"
+                return "backward"
             end
         else
             turtle.turnLeft()
-
+            
             local success, data = turtle.inspect()
             if success and data.name == "minecraft:cobblestone" then
                 turtle.turnLeft()
-                print("done")
-            
-                -- TODO: handle this
-            
+                return "forward"
             else
                 turtle.forward()
                 turtle.turnLeft()
-                mode = "forward"
+                return "forward"
             end
-
+        end
     else
         turtle.forward()
+        return mode
     end
 end
 
 function main()
-    mode = "forward"
+    local mode = "forward"
 
     while true do  -- Infinite loop for continuous farming
         -- Call inspect and move forward until hitting a cobblestone wall
         inspect()
-        move("forward")
+        mode = move(mode)
     end
 end
 
