@@ -1,31 +1,34 @@
--- Credits https://github.com/na-stewart/Better-Excavate/blob/master/bexcavate.lua
 local args = {...}
 if #args < 3 then
-    print("Usage: bexcavate <Width> <Length> <Depth>")
+    print("Usage: flatten <Width> <Length> <Height>")
     return
 end
 
 local turn_right = true
 local width = tonumber(args[1])
 local length = tonumber(args[2])
-local depth = tonumber(args[3])
- 
+local height = tonumber(args[3])
+
 local function rotate_right()
     turtle.turnRight()
     turtle.turnRight()
 end
 
- 
- 
 local function forward()
     while not turtle.forward() do
         turtle.dig()
         turtle.attack()
-        sleep()
+        sleep(0.5)
     end
 end
- 
- 
+
+local function up()
+    while not turtle.up() do
+        turtle.digUp()
+        sleep(0.5)
+    end
+end
+
 local function turn_around()
     if turn_right then
         turtle.turnRight()
@@ -41,8 +44,7 @@ local function turn_around()
         turn_right = true      
     end
 end
- 
- 
+
 local function reset()
     turtle.turnRight()
     if turn_right then
@@ -56,13 +58,12 @@ local function reset()
         forward()
     end
     turtle.turnRight()
-    turtle.digDown()
-    turtle.down()
+    turtle.digUp()
+    up()
 end
- 
 
-print("Excavation initiated...")
-for y = 1, depth do
+print("Flattening initiated...")
+for y = 1, height do
     turtle.select(1)
     turtle.refuel()
     turn_right = true
@@ -77,7 +78,7 @@ for y = 1, depth do
             reset()
         end
     end
-    print("Layer completed, " .. depth - y .." left to go.")
+    print("Layer completed, " .. height - y .." left to go.")
 end
 
-print("Excavation complete.")
+print("Flattening complete.")
