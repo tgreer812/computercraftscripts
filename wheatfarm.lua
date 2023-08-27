@@ -36,6 +36,9 @@ function inspect()
 
     turtle.down()
     success, data = turtle.inspectDown()
+    if success then
+        print(data)
+    end
     if success and data.name == "minecraft:farmland" then
         print("Planting on tilled land...")
         turtle.up()
