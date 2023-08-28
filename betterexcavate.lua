@@ -16,26 +16,6 @@ local function rotate_right()
 end
 
  
-local function torch_placement_check(x, z)
-    if (x % 8) == 0 and (z % 8) == 0 then
-        local slot = 0
-        local success, data = turtle.inspectDown()
-        if success == false then return end
-        for i = 1, 16, 1 do
-            data = turtle.getItemDetail(i)
-            if data ~= nil and data.name == "minecraft:torch" then
-                slot = i
-            end
-        end
-        if slot > 0 then
-            turtle.select(slot)  
-            rotate_right()
-            turtle.place()
-            rotate_right()
-        end
-    end
-end
- 
  
 local function forward()
     while not turtle.forward() do
@@ -89,8 +69,7 @@ for y = 1, depth do
     for x = 1, width, 1 do
         for z = 1, length, 1 do
             turtle.dig()
-            forward()
-            torch_placement_check(x, z)          
+            forward()    
         end
         if x < width then
             turn_around()
