@@ -4,6 +4,11 @@ local REFUEL_SLOT = 16
 
 -- Function to check and refuel the turtle
 function checkFuel()
+    -- Check for fuel mode
+    if turtle.getFuelLevel() == "unlimited" then
+        return
+    end
+
     if turtle.getFuelLevel() < FUEL_THRESHOLD then
         print("Waiting for fuel...")
         turtle.select(REFUEL_SLOT)
