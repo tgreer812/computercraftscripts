@@ -130,9 +130,7 @@ function move(mode)
             success, data = turtle.inspect()
             if success then
                 -- Deposit items
-                turtle.turnLeft()
                 depositItems()
-                turtle.turnRight()
                 turtle.turnRight()
 
                 print("Farm complete. Restarting in 180s")

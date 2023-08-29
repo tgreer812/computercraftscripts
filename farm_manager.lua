@@ -1,5 +1,6 @@
 -- Initialize chest peripheral
-local chest = peripheral.wrap("right")
+local chest = peripheral.wrap("left")
+local monitor = peripheral.wrap("right")
 
 -- Function to find specific item slot in chest
 function findItem(itemName)
