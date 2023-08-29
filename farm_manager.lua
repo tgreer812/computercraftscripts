@@ -5,12 +5,16 @@ local chest = peripheral.wrap("right")
 function manageTurtleInventory()
     print("Turtle docked. Managing inventory...")
     local turtle = peripheral.wrap("back")
+
+    print(turtle.size())
   
+    --[[
     -- Move all items from turtle to chest
     for i = 1, 16 do
         turtle.select(i)
         turtle.drop()
     end
+    ]]--
 
     -- Refill seeds and fuel in turtle from the chest
     local seedSlot = chest.findItem("minecraft:wheat_seeds")
