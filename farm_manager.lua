@@ -5,8 +5,6 @@ local chest = peripheral.wrap("right")
 function manageTurtleInventory()
     print("Turtle docked. Managing inventory...")
     local turtle = peripheral.wrap("back")
-
-    print(turtle.size())
   
     --[[
     -- Move all items from turtle to chest
