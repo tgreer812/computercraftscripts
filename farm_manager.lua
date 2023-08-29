@@ -1,29 +1,33 @@
 -- Initialize chest peripheral
 local chest = peripheral.wrap("right")
 
+-- Function to find specific item slot in chest
+function findItem(itemName)
+    local items = chest.list()
+    for slot, item in pairs(items) do
+        if item["name"] == itemName then
+            return slot
+        end
+    end
+    return nil
+end
+
 -- Function to manage turtle's inventory
 function manageTurtleInventory()
     print("Turtle docked. Managing inventory...")
-    local turtle = peripheral.wrap("back")
-  
-    --[[
-    -- Move all items from turtle to chest
-    for i = 1, 16 do
-        turtle.select(i)
-        turtle.drop()
-    end
-    ]]--
+    -- We assume that the turtle is on the "back" side, but you can adjust as needed.
+
+    -- Find slots containing seeds and fuel in the chest
+    local seedSlot = findItem("minecraft:wheat_seeds")
+    local fuelSlot = findItem("minecraft:kelp_block")
 
     -- Refill seeds and fuel in turtle from the chest
-    local seedSlot = chest.findItem("minecraft:wheat_seeds")
-    local fuelSlot = chest.findItem("minecraft:kelp_block")
-  
     if seedSlot then
-        chest.pushItems("front", seedSlot, 64, 1)  -- Fill seeds to turtle's first slot
+        chest.pushItems("back", seedSlot, 64, 1)  -- Fill seeds to turtle's first slot
     end
   
     if fuelSlot then
-        chest.pushItems("front", fuelSlot, 64, 16)  -- Fill fuel to turtle's 16th slot
+        chest.pushItems("back", fuelSlot, 64, 16)  -- Fill fuel to turtle's 16th slot
     end
   
     print("Inventory management complete.")
