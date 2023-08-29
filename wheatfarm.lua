@@ -33,12 +33,12 @@ function moveSeedsToFirstSlot()
     end
 end
 
--- Deposit all items except seeds
+-- Deposit all items except seeds and fuel
 function depositItems()
-    for i = 1, 16 do
+    for i = 2, 15 do
         turtle.select(i)
         local itemDetail = turtle.getItemDetail()
-        if itemDetail and itemDetail.name ~= "minecraft:wheat_seeds" then
+        if itemDetail then
             turtle.drop()
         end
     end
@@ -130,10 +130,10 @@ function move(mode)
             success, data = turtle.inspect()
             if success then
                 -- Deposit items
-                --turtle.turnLeft()
-                --depositItems()
-                --turtle.turnRight()
-                --turtle.turnRight()
+                turtle.turnLeft()
+                depositItems()
+                turtle.turnRight()
+                turtle.turnRight()
 
                 print("Farm complete. Restarting in 180s")
                 print("Fuel level: " .. turtle.getFuelLevel())

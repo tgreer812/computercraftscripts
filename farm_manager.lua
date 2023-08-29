@@ -19,7 +19,7 @@ function manageTurtleInventory()
 
     -- Find slots containing seeds and fuel in the chest
     local seedSlot = findItem("minecraft:wheat_seeds")
-    local fuelSlot = findItem("minecraft:kelp_block")
+    local fuelSlot = findItem("minecraft:dried_kelp_block")
 
     -- Refill seeds and fuel in turtle from the chest
     if seedSlot then
@@ -35,9 +35,12 @@ end
 
 -- Main function
 function main()
-    local event, side = os.pullEvent("peripheral")
-    if side == "back" then
-        manageTurtleInventory()
+    while true do
+        local event, side = os.pullEvent("peripheral")
+        if side == "back" then
+            manageTurtleInventory()
+        end
+        os.sleep(5)
     end
 end
 
