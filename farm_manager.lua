@@ -2,6 +2,35 @@
 local chest = peripheral.wrap("left")
 local monitor = peripheral.wrap("right")
 
+-- Function to clear the monitor screen
+function clearMonitor()
+    monitor.clear()
+    monitor.setCursorPos(1, 1)
+end
+
+-- Function to update the monitor
+function updateMonitor()
+    clearMonitor()
+    local seedCount = 0
+    local fuelCount = 0
+    local items = chest.list()
+    
+    for slot, item in pairs(items) do
+        if item["name"] == "minecraft:wheat_seeds" then
+            seedCount = seedCount + item["count"]
+        end
+        if item["name"] == "minecraft:dried_kelp_block" then
+            fuelCount = fuelCount + item["count"]
+        end
+    end
+
+    monitor.write("Status:")
+    monitor.setCursorPos(1, 2)
+    monitor.write("Seeds: " .. seedCount)
+    monitor.setCursorPos(1, 3)
+    monitor.write("Fuel: " .. fuelCount)
+end
+
 -- Function to find specific item slot in chest
 function findItem(itemName)
     local items = chest.list()
@@ -32,10 +61,13 @@ function manageTurtleInventory()
     end
   
     print("Inventory management complete.")
+    updateMonitor()  -- Update the monitor after inventory management
 end
 
 -- Main function
 function main()
+    updateMonitor()
+
     while true do
         local event, side = os.pullEvent("peripheral")
         if side == "back" then
