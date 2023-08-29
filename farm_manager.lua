@@ -13,6 +13,7 @@ function updateMonitor()
     clearMonitor()
     local seedCount = 0
     local fuelCount = 0
+    local wheatCount = 0
     local items = chest.list()
     
     for slot, item in pairs(items) do
@@ -22,12 +23,17 @@ function updateMonitor()
         if item["name"] == "minecraft:dried_kelp_block" then
             fuelCount = fuelCount + item["count"]
         end
+        if item["name"] == "minecraft:wheat" then
+            wheatCount = wheatCount + item["count"]
+        end
     end
 
     monitor.write("Status:")
     monitor.setCursorPos(1, 2)
-    monitor.write("Seeds: " .. seedCount)
+    monitor.write("Wheat: " .. wheatCount)
     monitor.setCursorPos(1, 3)
+    monitor.write("Seeds: " .. seedCount)
+    monitor.setCursorPos(1, 4)
     monitor.write("Fuel: " .. fuelCount)
 end
 
