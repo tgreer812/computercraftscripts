@@ -1,10 +1,10 @@
--- Initialize peripherals
-local turtle = peripheral.wrap("back")
+-- Initialize chest peripheral
 local chest = peripheral.wrap("right")
 
 -- Function to manage turtle's inventory
 function manageTurtleInventory()
     print("Turtle docked. Managing inventory...")
+    local turtle = peripheral.wrap("back")
   
     -- Move all items from turtle to chest
     for i = 1, 16 do
@@ -29,8 +29,8 @@ end
 
 -- Main function
 function main()
-    while true do
-        sleep(1)
+    local event, side = os.pullEvent("peripheral")
+    if side == "back" then
         manageTurtleInventory()
     end
 end
