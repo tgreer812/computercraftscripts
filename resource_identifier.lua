@@ -9,6 +9,16 @@ local chest = peripheral.wrap("right")
 -- Open the general channel for communication
 modem.open(generalChannel)
 
+-- Helper function to check if a value exists in a table
+function table.contains(table, element)
+    for _, value in pairs(table) do
+        if value == element then
+            return true
+        end
+    end
+    return false
+end
+
 while true do
     -- Wait for a modem message
     local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
@@ -54,14 +64,4 @@ while true do
             modem.transmit(replyChannel, generalChannel, "done")
         end
     end
-end
-
--- Helper function to check if a value exists in a table
-function table.contains(table, element)
-  for _, value in pairs(table) do
-    if value == element then
-      return true
-    end
-  end
-  return false
 end
