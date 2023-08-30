@@ -35,7 +35,7 @@ while true do
             -- Create a response object containing stationID and resources in and out
             local response = {
                 stationID = STATION_ID,
-                resourcesIn = {"coal", "iron_ore"},
+                resourcesIn = {},
                 resourcesOut = {"wheat", "wheat_seeds"}
             }
 
@@ -44,11 +44,13 @@ while true do
             
             -- Logic to push items to the turtle based on `inventoryStatus`
             local nextEmptySlot = 1
+            print("chest size is " .. chest.size())
             for slot = 1, chest.size() do
                 local itemDetail = chest.getItemDetail(slot)
                 if itemDetail and table.contains(response.resourcesOut, itemDetail.name) then
                     -- Find the next empty slot in the turtle's inventory
                     while inventoryStatus[nextEmptySlot] do
+                        print("slot " .. nextEmptySlot .. " " .. inventoryStatus[nextEmptySlot])
                         nextEmptySlot = nextEmptySlot + 1
                     end
                     -- If nextEmptySlot exceeds 16, the turtle is full
