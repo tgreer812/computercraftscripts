@@ -1,4 +1,4 @@
-local STATION_ID = "farm_1"
+STATION_ID = "farm_1"
 
 local modem = peripheral.find("modem")
 local generalChannel = 69
@@ -8,16 +8,6 @@ local chest = peripheral.wrap("right")
 
 -- Open the general channel for communication
 modem.open(generalChannel)
-
-function findItem(itemName)
-    local items = chest.list()
-    for slot, item in pairs(items) do
-        if item["name"] == itemName then
-            return slot
-        end
-    end
-    return nil
-end
 
 while true do
     -- Wait for a modem message
@@ -35,18 +25,28 @@ while true do
             -- Create a response object containing stationID and resources in and out
             local response = {
                 stationID = STATION_ID,
-                resourcesIn = {},
+                resourcesIn = {"coal", "iron_ore"},
                 resourcesOut = {"wheat", "wheat_seeds"}
             }
 
             -- Transmit the response back to the turtle
             modem.transmit(replyChannel, generalChannel, textutils.serialize(response))
-
+            
             -- Logic to push items to the turtle based on `inventoryStatus`
-            for slot, item in pairs(response.resourcesOut) do
-                local itemSlot = findItem("minecraft:"..item)
-                if itemSlot and (not inventoryStatus[slot] or inventoryStatus[slot].name == item) then
-                    chest.pushItems("front", itemSlot, 64, slot)
+            local nextEmptySlot = 1
+            for slot = 1, chest.size() do
+                local itemDetail = chest.getItemDetail(slot)
+                if itemDetail and table.contains(response.resourcesOut, itemDetail.name) then
+                    -- Find the next empty slot in the turtle's inventory
+                    while inventoryStatus[nextEmptySlot] do
+                        nextEmptySlot = nextEmptySlot + 1
+                    end
+                    -- If nextEmptySlot exceeds 16, the turtle is full
+                    if nextEmptySlot > 16 then
+                        break
+                    end
+                    chest.pushItems("front", slot, 64, nextEmptySlot)
+                    inventoryStatus[nextEmptySlot] = itemDetail
                 end
             end
             
@@ -54,4 +54,14 @@ while true do
             modem.transmit(replyChannel, generalChannel, "done")
         end
     end
+end
+
+-- Helper function to check if a value exists in a table
+function table.contains(table, element)
+  for _, value in pairs(table) do
+    if value == element then
+      return true
+    end
+  end
+  return false
 end

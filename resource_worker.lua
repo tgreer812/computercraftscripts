@@ -34,7 +34,7 @@ while true do
         until channel == randomChannel
 
         local response = textutils.unserialize(message)
-        if response.stationID == "centralStorage" then
+        if response.stationID == "central" then
             turtle.turnLeft()
             for i = 1, 16 do
                 turtle.select(i)
