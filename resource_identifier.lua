@@ -9,6 +9,16 @@ local chest = peripheral.wrap("right")
 -- Open the general channel for communication
 modem.open(generalChannel)
 
+function findItem(itemName)
+    local items = chest.list()
+    for slot, item in pairs(items) do
+        if item["name"] == itemName then
+            return slot
+        end
+    end
+    return nil
+end
+
 while true do
     -- Wait for a modem message
     local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
@@ -34,7 +44,7 @@ while true do
 
             -- Logic to push items to the turtle based on `inventoryStatus`
             for slot, item in pairs(response.resourcesOut) do
-                local itemSlot = chest.findItem("minecraft:"..item)
+                local itemSlot = findItem("minecraft:"..item)
                 if itemSlot and (not inventoryStatus[slot] or inventoryStatus[slot].name == item) then
                     chest.pushItems("front", itemSlot, 64, slot)
                 end
