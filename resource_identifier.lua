@@ -1,4 +1,6 @@
-STATION_ID = "farm_1"
+local STATION_ID = "farm_1"
+local RESOURCES_IN = {}
+local RESOURCES_OUT = {"minecraft:wheat", "minecraft:wheat_seeds"}
 
 local modem = peripheral.find("modem")
 local generalChannel = 69
@@ -35,28 +37,30 @@ while true do
             -- Create a response object containing stationID and resources in and out
             local response = {
                 stationID = STATION_ID,
-                resourcesIn = {},
-                resourcesOut = {"minecraft:wheat", "minecraft:wheat_seeds"}
+                resourcesIn = RESOURCES_IN,
+                resourcesOut = RESOURCES_OUT
             }
 
             -- Transmit the response back to the turtle
             modem.transmit(replyChannel, generalChannel, textutils.serialize(response))
-            
-            -- Logic to push items to the turtle based on `inventoryStatus`
-            local nextEmptySlot = 1
-            for slot = 1, chest.size() do
-                local itemDetail = chest.getItemDetail(slot)
-                if itemDetail and table.contains(response.resourcesOut, itemDetail.name) then
-                    -- Find the next empty slot in the turtle's inventory
-                    while inventoryStatus[nextEmptySlot] do
-                        nextEmptySlot = nextEmptySlot + 1
+
+            if STATION_ID ~= "central" then
+                -- Logic to push items to the turtle based on `inventoryStatus`
+                local nextEmptySlot = 1
+                for slot = 1, chest.size() do
+                    local itemDetail = chest.getItemDetail(slot)
+                    if itemDetail and table.contains(response.resourcesOut, itemDetail.name) then
+                        -- Find the next empty slot in the turtle's inventory
+                        while inventoryStatus[nextEmptySlot] do
+                            nextEmptySlot = nextEmptySlot + 1
+                        end
+                        -- If nextEmptySlot exceeds 16, the turtle is full
+                        if nextEmptySlot > 16 then
+                            break
+                        end
+                        chest.pushItems("front", slot, 64, nextEmptySlot)
+                        inventoryStatus[nextEmptySlot] = itemDetail
                     end
-                    -- If nextEmptySlot exceeds 16, the turtle is full
-                    if nextEmptySlot > 16 then
-                        break
-                    end
-                    chest.pushItems("front", slot, 64, nextEmptySlot)
-                    inventoryStatus[nextEmptySlot] = itemDetail
                 end
             end
             
