@@ -42,7 +42,7 @@ while true do
             local response = {
                 stationID = STATION_ID,
                 resourcesIn = {},
-                resourcesOut = {"wheat", "wheat_seeds"}
+                resourcesOut = {"minecraft:wheat", "minecraft:wheat_seeds"}
             }
 
             print("Resources out:")
@@ -65,7 +65,6 @@ while true do
                 if itemDetail and table.contains(response.resourcesOut, itemDetail.name) then
                     -- Find the next empty slot in the turtle's inventory
                     while inventoryStatus[nextEmptySlot] do
-                        print("slot " .. nextEmptySlot .. " " .. inventoryStatus[nextEmptySlot])
                         nextEmptySlot = nextEmptySlot + 1
                     end
                     -- If nextEmptySlot exceeds 16, the turtle is full
