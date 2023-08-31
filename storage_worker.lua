@@ -1,43 +1,46 @@
 -- Constants
-local HEIGHT = 2  -- Maximum height of the chest stack
-local SLOTS = 16  -- Number of inventory slots in the turtle
+local MAX_HEIGHT = 2  -- Maximum height of the chest stack
+local TURTLE_SLOTS = 16  -- Number of inventory slots in the turtle
+local CHEST_SLOTS = 54  -- Number of slots in a double chest
 
--- Item to forward position mapping
+-- Initialize starting chest
+local startingChest = peripheral.wrap("bottom")
+
+-- Mapping of item types to their corresponding forward positions
 local itemToForwardMapping = {
     ["minecraft:wheat"] = 1,
     ["minecraft:wheat_seeds"] = 2,
     ["minecraft:iron_ore"] = 3
 }
 
--- Function to move the turtle to the target position
+-- Moves the turtle to the specified forward position
 local function goToPosition(forwardIndex)
-    -- Get out of the starting position
-    turtle.forward()
-    turtle.forward()
-
-    for i = 1, forwardIndex do
+    for i = 1, 2 + forwardIndex do
         turtle.forward()
     end
 end
 
--- Function to return the turtle to the starting position
-local function returnToStart(forwardIndex, heightIndex)
-    for i = 1, heightIndex do
+-- Returns the turtle to the starting position
+local function returnToStart(forwardIndex, currentHeightIndex)
+    for i = 1, currentHeightIndex do
         turtle.down()
     end
-    for i = 1, forwardIndex do
+    for i = 1, 2 + forwardIndex do
         turtle.back()
     end
 end
 
--- Check if the turtle can deposit items in the chest at its side
+-- Checks if the turtle can deposit items into a chest at the given side
 local function canDeposit(side)
     local chest = peripheral.wrap(side)
-    --TODO: check if chest has any space
-    return chest and chest.size() > 0
+    if not chest then return false end
+    for slot = 1, CHEST_SLOTS do
+        if not chest.getItemDetail(slot) then return true end
+    end
+    return false
 end
 
--- Deposit items into the appropriate chest
+-- Deposits an item into the appropriate chest
 local function depositItem(item)
     local forwardIndex = itemToForwardMapping[item]
     if not forwardIndex then
@@ -45,43 +48,76 @@ local function depositItem(item)
         return
     end
 
-    local heightIndex = 0
-    local deposited = false
+    local currentHeightIndex = 0
+    local isDeposited = false
 
-    -- Move to the correct forward position
     goToPosition(forwardIndex)
 
-    while not deposited and heightIndex < HEIGHT do
+    while not isDeposited and currentHeightIndex < MAX_HEIGHT do
         if canDeposit("left") then
             turtle.turnLeft()
             turtle.drop()
             turtle.turnRight()
-            deposited = true
+            isDeposited = true
         elseif canDeposit("right") then
             turtle.turnRight()
             turtle.drop()
             turtle.turnLeft()
-            deposited = true
+            isDeposited = true
         else
-            -- Move up and continue checking
             turtle.up()
-            heightIndex = heightIndex + 1
+            currentHeightIndex = currentHeightIndex + 1
         end
     end
 
-    if not deposited then
+    if not isDeposited then
         print("Chest overflow for item: " .. item)
     else
-        returnToStart(forwardIndex, heightIndex)
+        returnToStart(forwardIndex, currentHeightIndex)
     end
 end
 
--- Main loop
-while true do
-    -- Simulate the turtle having an inventory with "wheat_seeds"
-    -- Normally you would go through the turtle's actual inventory
-    depositItem("minecraft:wheat_seeds")
+-- Function to unload items from starting chest to turtle's inventory
+local function unloadFromStartChest()
+    for slot = 1, startingChest.size() do
+        -- Check if turtle's inventory is full
+        local isFull = true
+        for tSlot = 1, SLOTS do
+            if turtle.getItemCount(tSlot) == 0 then
+                isFull = false
+                break
+            end
+        end
 
-    -- Delay to prevent overwhelming the system
-    os.sleep(2)
+        -- Stop unloading if turtle is full
+        if isFull then
+            print("Turtle's inventory is full.")
+            return
+        end
+
+        local itemDetail = startingChest.getItemDetail(slot)
+        if itemDetail then
+            startingChest.pushItems("top", slot, itemDetail.count)
+        end
+    end
+end
+
+local function depositAllItems()
+    for i = 1, SLOTS do
+        turtle.select(i)
+        local itemDetail = turtle.getItemDetail()
+        if itemDetail then
+            depositItem(itemDetail.name)
+        end
+    end
+end
+
+
+local function main()
+    -- Main loop
+    while true do
+        unloadFromStartChest()
+        depositAllItems()
+        os.sleep(5)
+    end
 end
