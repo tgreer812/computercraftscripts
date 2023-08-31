@@ -4,7 +4,7 @@ local TURTLE_SLOTS = 16  -- Number of inventory slots in the turtle
 local CHEST_SLOTS = 54  -- Number of slots in a double chest
 
 -- Initialize starting chest
-local startingChest = peripheral.wrap("bottom")
+local startingChest = peripheral.wrap("back")
 
 -- Mapping of item types to their corresponding forward positions
 local itemToForwardMapping = {
@@ -15,7 +15,7 @@ local itemToForwardMapping = {
 
 -- Moves the turtle to the specified forward position
 local function goToPosition(forwardIndex)
-    for i = 1, 2 + forwardIndex do
+    for i = 1, 1 + forwardIndex do
         turtle.forward()
     end
 end
@@ -25,7 +25,7 @@ local function returnToStart(forwardIndex, currentHeightIndex)
     for i = 1, currentHeightIndex do
         turtle.down()
     end
-    for i = 1, 2 + forwardIndex do
+    for i = 1, 1 + forwardIndex do
         turtle.back()
     end
 end
@@ -82,7 +82,7 @@ local function unloadFromStartChest()
     for slot = 1, startingChest.size() do
         -- Check if turtle's inventory is full
         local isFull = true
-        for tSlot = 1, SLOTS do
+        for tSlot = 1, TURTLE_SLOTS do
             if turtle.getItemCount(tSlot) == 0 then
                 isFull = false
                 break
@@ -97,13 +97,13 @@ local function unloadFromStartChest()
 
         local itemDetail = startingChest.getItemDetail(slot)
         if itemDetail then
-            startingChest.pushItems("top", slot, itemDetail.count)
+            startingChest.pushItems("front", slot, itemDetail.count)
         end
     end
 end
 
 local function depositAllItems()
-    for i = 1, SLOTS do
+    for i = 1, TURTLE_SLOTS do
         turtle.select(i)
         local itemDetail = turtle.getItemDetail()
         if itemDetail then
@@ -121,3 +121,5 @@ local function main()
         os.sleep(5)
     end
 end
+
+main()
