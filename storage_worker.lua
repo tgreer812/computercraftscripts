@@ -97,7 +97,7 @@ local function unloadFromStartChest()
 
         local itemDetail = startingChest.getItemDetail(slot)
         if itemDetail then
-            startingChest.pushItems("front", slot, itemDetail.count)
+            startingChest.pushItems("right", slot, 64)
         end
     end
 end
@@ -116,6 +116,7 @@ end
 local function main()
     -- Main loop
     while true do
+        startingChest = peripheral.wrap("back")
         unloadFromStartChest()
         depositAllItems()
         os.sleep(5)
