@@ -117,6 +117,9 @@ local function main()
     -- Main loop
     while true do
         startingChest = peripheral.wrap("back")
+        -- print startingChest's peripherals
+        print("Starting chest's peripherals:")
+
         unloadFromStartChest()
         depositAllItems()
         os.sleep(5)
