@@ -26,7 +26,7 @@ local function returnToStart(forwardIndex, heightIndex)
         turtle.down()
     end
     for i = 1, forwardIndex do
-        turtle.forward()
+        turtle.back()
     end
 end
 
@@ -55,12 +55,12 @@ local function depositItem(item)
         if canDeposit("left") then
             turtle.turnLeft()
             turtle.drop()
-            turtle.turnLeft()
+            turtle.turnRight()
             deposited = true
         elseif canDeposit("right") then
             turtle.turnRight()
             turtle.drop()
-            turtle.turnRight()
+            turtle.turnLeft()
             deposited = true
         else
             -- Move up and continue checking
