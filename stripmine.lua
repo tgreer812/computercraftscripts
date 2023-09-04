@@ -50,3 +50,30 @@ for i = 1, distance do
 end
 
 print("Strip mining complete!")
+print("Waiting for user to kill script")
+
+-- Initialize countdown
+local countdown = 15
+while countdown > 0 do
+    print("Time remaining: " .. countdown)
+    os.sleep(1) -- Sleep for 1 second
+    countdown = countdown - 1
+end
+
+-- If user didn't stop the script, turn around and return
+print("Returning to the original position")
+
+-- Turn around
+turtle.turnLeft()
+turtle.turnLeft()
+
+-- Return to the original position
+for i = 1, distance do
+    turtle.forward()
+end
+
+-- Turn back to the original direction
+turtle.turnLeft()
+turtle.turnLeft()
+
+print("Returned to the original position.")
